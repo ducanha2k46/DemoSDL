@@ -4,8 +4,7 @@
 #include"Block.h"
 
 
-SDL_Texture* gBackground;
-
+SDL_Texture* gBackground,*gBackgroundBelow;
 bool init() {
 	bool check = true;
 	int ret = SDL_Init(SDL_INIT_VIDEO);	
@@ -41,6 +40,9 @@ void LoadBackGround() {
 	gBackground = LoadImageTexture("Image/BackGround.png", gScreen);
 }
 
+void LoadBackGroundBelow() {
+	gBackgroundBelow = LoadImageTexture("Image/BackGround_Below.png", gScreen);
+}
 
 void Close() {
 	SDL_DestroyRenderer(gScreen);
@@ -58,9 +60,12 @@ int main(int argc, char* argv[]) {
 
 	SDL_SetRenderDrawColor(gScreen, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
 	LoadBackGround();
+	LoadBackGroundBelow();
+	srand(time(NULL));
 
 	Block gBlock[20];
-	int add_ = 250;
+	int add_ = rand();
+	add_ = (add_ % 100) + 250;
 	for (int i = 0; i < 20; i++) {
 		gBlock[i].Set_up_block(gScreen);
 		gBlock[i].block_rect.x = gBlock[i].block_rect.x + add_ * i;
@@ -68,13 +73,17 @@ int main(int argc, char* argv[]) {
 
 
 	SDL_Rect screen_rect = { 0,0,1200,672 };
-	srand(time(NULL));
-	
+
+	SDL_Rect screen_below_rect = { 0,552,1200,150 };
+	SDL_Rect below_rect = { 0,0,1200,150 };
+
 	Bird gBird;
 	gBird.set_up(gScreen);
-	int y_bird = 200;
+	int y_bird = 200, x_bird = 200;
 	bool quit = false;
 	int animation_bird = 0;
+
+	int stop = 0;
 	while (!quit) {
 		while (SDL_PollEvent(&gEvent) != 0)
 		{
@@ -86,6 +95,7 @@ int main(int argc, char* argv[]) {
 
 		SDL_RenderClear(gScreen);
 
+		SDL_RenderCopy(gScreen, gBackgroundBelow, &screen_below_rect, &below_rect);
 		SDL_RenderCopy(gScreen, gBackground, NULL, &screen_rect);
 
 		if (gEvent.type == SDL_QUIT) quit = true;
@@ -108,7 +118,7 @@ int main(int argc, char* argv[]) {
 			}
 		}
 
-		animation_bird++; 
+		animation_bird++;
 		if (animation_bird >= 84) gBird.status_ = 0;
 		if (gBird.status_ == 1) {
 			gBird.current_frame_ = animation_bird / 14;
@@ -123,23 +133,48 @@ int main(int argc, char* argv[]) {
 		else y_bird = y_bird - 1;
 
 
-		gBird.Show(gScreen, { 200,y_bird,77,77 });
 
-		for (int i = 0; i < 20; i++) {
-			if (CheckCollision({ 200,y_bird,77,77 }, gBlock[i].block_rect)) {
-				SDL_Delay(5000);
+		if (stop == 0)
+			for (int i = 0; i < 20; i++) {
+				gBlock[i].block_rect.x--;
+				gBlock[i].Show_block(gScreen);
 			}
+		else
+			for (int i = 0; i < 20; i++) {
+				gBlock[i].Show_block(gScreen);
+			}
+
+
+
+		gBird.Show(gScreen, { x_bird,y_bird,gBird.bird_width_,gBird.bird_height_ });
+		if (stop == 0)
+			for (int i = 0; i < 20; i++) {
+				if (CheckCollision({ x_bird,y_bird,gBird.bird_width_,gBird.bird_height_ }, gBlock[i].block_rect)) {
+					stop = 1;
+					if (x_bird <= gBlock[i].block_rect.x) {
+						x_bird = gBlock[i].block_rect.x;
+					}
+					break;
+				}
+				else
+					if (CheckCollision({ x_bird,y_bird,gBird.bird_width_,gBird.bird_height_ }, gBlock[i].rect_fix)) {
+						stop = 1;
+						if (x_bird <= gBlock[i].block_rect.x) {
+							x_bird = gBlock[i].block_rect.x;
+						}
+						break;
+					}
+			}
+		if (stop == 1) {
+			y_bird += 3;
+		}
+		if (y_bird >= 552) {
+			SDL_Delay(500);
 		}
 
-
-
-		for (int i = 0; i < 20; i++) {
-			gBlock[i].block_rect.x--;
-			gBlock[i].Show_block(gScreen);
-		}
 		SDL_Delay(4);
 		SDL_RenderPresent(gScreen);
-	}  
+	}
 	Close();
 	return 0;
 }
