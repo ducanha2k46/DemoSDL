@@ -13,30 +13,6 @@ SDL_Texture* LoadImageTexture(string path, SDL_Renderer* screen) {
 	return new_texture;
 }
 
-/*bool CheckCollision(const SDL_Rect bird_check, const SDL_Rect block_check) {
-	int bird_top_left_x = bird_check.x;
-	int bird_top_left_y = bird_check.y;
-	int bird_top_right_x = bird_check.x + bird_check.w;
-	int bird_top_right_y = bird_check.y;
-	int bird_bottom_left_x = bird_check.x;
-	int bird_bottom_left_y = bird_check.y + bird_check.h;
-	int bird_bottom_right_x = bird_check.x + bird_check.w;
-	int bird_bottom_right_y = bird_check.y + bird_check.h;
-
-	int block_on_top_left_x = block_check.x;
-	int block_on_top_left_y = 0;
-	//int block_on_top_right_x = block_check.x + block_check.w;
-	//int block_on_top_right_y = block_check.y;
-	int block_below_bottom_left_x = block_check.x;
-	int block_below_bottom_left_y = block_check.y + block_check.h;
-	int block_below_bottom_right_x = block_check.x + block_check.w;
-	int block_below_bottom_right_y = block_check.y + block_check.h;
-
-	if () {
-		return false;
-	}
-}*/
-
 bool CheckCollision(const SDL_Rect& object1, const SDL_Rect& object2)
 {
     int left_a = object1.x;

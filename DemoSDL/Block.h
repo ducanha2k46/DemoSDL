@@ -7,13 +7,13 @@ class Block
 {
 public:
 	SDL_Texture* block_on, * block_below;
-	SDL_Rect block_rect;
+	SDL_Rect block_rect, rect_fix;
 	void Show_block(SDL_Renderer* des);
 	void Set_up_block(SDL_Renderer* des);
 private:
 
 };
-
+         
 
 void Block::Set_up_block(SDL_Renderer* des) {
 	block_on = LoadImageTexture("Image/On.png", des);
@@ -29,7 +29,7 @@ void Block::Set_up_block(SDL_Renderer* des) {
 void Block::Show_block(SDL_Renderer* des) {
 	SDL_Rect show_block_rect_on = { 0,0,86,400 };
 	SDL_Rect show_block_rect_below = { 0,0,86,400 };
-	SDL_Rect rect_fix = block_rect;
+	rect_fix = block_rect;
 
 	rect_fix.y = block_rect.y + 555;
 	SDL_RenderCopy(des, block_on, &show_block_rect_on, &block_rect);

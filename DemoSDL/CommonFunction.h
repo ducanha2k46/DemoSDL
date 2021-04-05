@@ -6,7 +6,7 @@
 #include<string>
 #include<SDL_image.h>
 #include<SDL.h>
-#include<time.h>
+#include<ctime>
 
 using namespace std;
 
