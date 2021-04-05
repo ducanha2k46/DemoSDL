@@ -131,6 +131,8 @@ int main(int argc, char* argv[]) {
 			}
 		}
 
+
+
 		for (int i = 0; i < 20; i++) {
 			gBlock[i].block_rect.x--;
 			gBlock[i].Show_block(gScreen);
