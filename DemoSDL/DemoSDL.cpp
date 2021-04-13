@@ -2,7 +2,7 @@
 #include"MainObject.h"
 #include"Display.h"
 #include"Block.h"
-
+#include"Platform.h"
 
 SDL_Texture* gBackground, * gBackgroundBelow;
 
@@ -10,7 +10,7 @@ SDL_Texture* gBackground, * gBackgroundBelow;
 
 bool init() {
 	bool check = true;
-	int ret = SDL_Init(SDL_INIT_VIDEO);	
+	int ret = SDL_INIT_VIDEO;
 	if (ret < 0) {
 		return false;
 	}
@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
 	srand(time(NULL));
 
 	Block gBlock[20];
-
+	Flatform gPlatform[20];
 
 	//Random khoảng cách Block
 	int add_ = rand();
@@ -79,15 +79,19 @@ int main(int argc, char* argv[]) {
 		gBlock[i].block_rect.x = gBlock[i].block_rect.x + add_ * i;
 	}
 
+	for (int i = 0; i < 20; i++) {
+		gPlatform[i].Set_up_flatform(gScreen);
+		gPlatform[i].flatform_rect.x = gPlatform[i].flatform_rect.x + add_ * i;
+	}
+
 
 	SDL_Rect screen_rect = { 0,0,1200,672 };
-
-
 	SDL_Rect below_rect = { 0,552,1200,150 };
 
 	Bird gBird;
 	gBird.set_up(gScreen);
 	int y_bird = 200, x_bird = 200;
+
 	bool quit = false;
 	int animation_bird = 0;
 
@@ -107,7 +111,6 @@ int main(int argc, char* argv[]) {
 
 		SDL_RenderCopy(gScreen, gBackground, NULL, &screen_rect);
 
-		SDL_RenderCopy(gScreen, gBackgroundBelow, NULL, &below_rect);
 
 		if (gEvent.type == SDL_QUIT) quit = true;
 
@@ -150,12 +153,16 @@ int main(int argc, char* argv[]) {
 				gBlock[i].block_rect.x--;
 				gBlock[i].Show_block(gScreen);
 
+				gPlatform[i].flatform_rect.x--;
+				gPlatform[i].Show_flatform(gScreen);
+
 				SDL_RenderCopy(gScreen, gBackgroundBelow, NULL, &below_rect);
 			}
 		else
 			for (int i = 0; i < 20; i++) {
 				gBlock[i].Show_block(gScreen);
 
+				gPlatform[i].Show_flatform(gScreen);
 				SDL_RenderCopy(gScreen, gBackgroundBelow, NULL, &below_rect);
 			}
 
