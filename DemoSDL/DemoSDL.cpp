@@ -66,11 +66,13 @@ int main(int argc, char* argv[]) {
 
 	Block gBlock[20];
 
+
 	//Random khoảng cách Block
 	int add_ = rand();
 	add_ = (add_ % 100) + 250;
 
 	//Load Image Block
+	
 	for (int i = 0; i < 20; i++) {
 		gBlock[i].Set_up_block(gScreen);
 		gBlock[i].block_rect.x = gBlock[i].block_rect.x + add_ * i;
@@ -78,6 +80,8 @@ int main(int argc, char* argv[]) {
 
 
 	SDL_Rect screen_rect = { 0,0,1200,672 };
+
+	SDL_Rect screen_below_rect = { 0,552,1200,150 };
 	SDL_Rect below_rect = { 0,552,1200,150 };
 
 	Bird gBird;
@@ -87,6 +91,7 @@ int main(int argc, char* argv[]) {
 	int animation_bird = 0;
 
 	int stop = 0;
+
 
 	while (!quit) {
 		while (SDL_PollEvent(&gEvent) != 0)
@@ -99,6 +104,7 @@ int main(int argc, char* argv[]) {
 
 		SDL_RenderClear(gScreen);
 
+		SDL_RenderCopy(gScreen, gBackgroundBelow, &screen_below_rect, &below_rect);
 		SDL_RenderCopy(gScreen, gBackground, NULL, &screen_rect);
 
 		SDL_RenderCopy(gScreen, gBackgroundBelow, NULL, &below_rect);
@@ -153,8 +159,6 @@ int main(int argc, char* argv[]) {
 				SDL_RenderCopy(gScreen, gBackgroundBelow, NULL, &below_rect);
 			}
 
-
-
 		gBird.Show(gScreen, { x_bird,y_bird,gBird.bird_width_,gBird.bird_height_ });
 		if (stop == 0)
 			for (int i = 0; i < 20; i++) {
@@ -177,7 +181,9 @@ int main(int argc, char* argv[]) {
 		if (stop == 1) {
 			y_bird += 3;
 		}
+
 		if ((y_bird + gBird.bird_height_) >= 552) {
+
 			SDL_Delay(500);
 		}
 
