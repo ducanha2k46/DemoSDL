@@ -4,7 +4,7 @@
 #include"Block.h"
 #include"Platform.h"
 
-SDL_Texture* gBackground, * gBackgroundBelow;
+SDL_Texture* gBackground;
 
 //sua o laptop
 
@@ -43,10 +43,6 @@ void LoadBackGround() {
 	gBackground = LoadImageTexture("Image/BackGround.png", gScreen);
 }
 
-void LoadBackGroundBelow() {
-	gBackgroundBelow = LoadImageTexture("Image/BackGround_Below.png", gScreen);
-}
-
 void Close() {
 	SDL_DestroyRenderer(gScreen);
 	gScreen = NULL;
@@ -63,7 +59,6 @@ int main(int argc, char* argv[]) {
 
 	SDL_SetRenderDrawColor(gScreen, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
 	LoadBackGround();
-	LoadBackGroundBelow();
 	srand(time(NULL));
 
 	Block gBlock[20];
@@ -72,22 +67,20 @@ int main(int argc, char* argv[]) {
 	//Random khoảng cách Block
 	int add_ = rand();
 	add_ = (add_ % 100) + 250;
-
 	//Load Image Block
 	for (int i = 0; i < 20; i++) {
 		gBlock[i].Set_up_block(gScreen);
 		gBlock[i].block_rect.x = gBlock[i].block_rect.x + add_ * i;
 	}
 
+	//Load Image Flatform
 	for (int i = 0; i < 20; i++) {
 		gPlatform[i].Set_up_flatform(gScreen);
-		gPlatform[i].flatform_rect.x = gPlatform[i].flatform_rect.x + add_ * i;
+		gPlatform[i].flatform_rect.x = gPlatform[i].flatform_rect.x + 1200 * i;
 	}
 
 
 	SDL_Rect screen_rect = { 0,0,1200,672 };
-	SDL_Rect below_rect = { 0,552,1200,150 };
-
 	Bird gBird;
 	gBird.set_up(gScreen);
 	int y_bird = 200, x_bird = 200;
@@ -110,8 +103,6 @@ int main(int argc, char* argv[]) {
 		SDL_RenderClear(gScreen);
 
 		SDL_RenderCopy(gScreen, gBackground, NULL, &screen_rect);
-
-
 		if (gEvent.type == SDL_QUIT) quit = true;
 
 		if (gEvent.type == SDL_KEYDOWN && gEvent.key.keysym.sym == SDLK_ESCAPE) quit = true;
@@ -151,19 +142,18 @@ int main(int argc, char* argv[]) {
 		if (stop == 0)
 			for (int i = 0; i < 20; i++) {
 				gBlock[i].block_rect.x--;
-				gBlock[i].Show_block(gScreen);
-
 				gPlatform[i].flatform_rect.x--;
+
+				gBlock[i].Show_block(gScreen);
 				gPlatform[i].Show_flatform(gScreen);
 
-				SDL_RenderCopy(gScreen, gBackgroundBelow, NULL, &below_rect);
 			}
 		else
 			for (int i = 0; i < 20; i++) {
+
 				gBlock[i].Show_block(gScreen);
 
 				gPlatform[i].Show_flatform(gScreen);
-				SDL_RenderCopy(gScreen, gBackgroundBelow, NULL, &below_rect);
 			}
 
 		gBird.Show(gScreen, { x_bird,y_bird,gBird.bird_width_,gBird.bird_height_ });
@@ -188,9 +178,9 @@ int main(int argc, char* argv[]) {
 		if (stop == 1) {
 			y_bird += 3;
 		}
-		if ((y_bird + gBird.bird_height_) >= 552) {
+		/*if ((y_bird + gBird.bird_height_) >= 552) {
 			SDL_Delay(500);
-		}
+		}*/
 
 		SDL_Delay(4);
 		SDL_RenderPresent(gScreen);
