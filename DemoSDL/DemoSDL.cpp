@@ -11,17 +11,16 @@ SDL_Texture* gBackGroundBegin;
 
 bool init() {
 	bool check = true;
-	int ret = SDL_INIT_VIDEO;
-	if (ret < 0) {
+	if (SDL_INIT_VIDEO | SDL_INIT_AUDIO < 0) {
 		return false;
 	}
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
-	gWindow = SDL_CreateWindow("Flappy Bird", 
-								SDL_WINDOWPOS_UNDEFINED, 
-								SDL_WINDOWPOS_UNDEFINED, 
-								SCREEN_WIGHT, SCREEN_HIGHT, 
-								SDL_WINDOW_SHOWN);
+	gWindow = SDL_CreateWindow("Flappy Bird",
+		SDL_WINDOWPOS_UNDEFINED,
+		SDL_WINDOWPOS_UNDEFINED,
+		SCREEN_WIGHT, SCREEN_HIGHT,
+		SDL_WINDOW_SHOWN);
 
 	if (gWindow == NULL) {
 		check = false;
@@ -36,6 +35,10 @@ bool init() {
 			int imgFlags = IMG_INIT_PNG;
 			if (!(IMG_Init(imgFlags) && imgFlags)) {
 				check = true;
+			}
+
+			if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+				check = false;
 			}
 		}
 	}
@@ -106,7 +109,7 @@ int main(int argc, char* argv[]) {
 		}
 
 		SDL_RenderClear(gScreen);
-   		if(begin == false) {
+		if (begin == false) {
 			SDL_RenderClear(gScreen);
 
 			SDL_RenderCopy(gScreen, gBackGroundBegin, NULL, &screen_rect);
@@ -118,7 +121,7 @@ int main(int argc, char* argv[]) {
 			}
 			else continue;
 		}
-		
+
 		SDL_RenderCopy(gScreen, gBackground, NULL, &screen_rect);
 		if (gEvent.type == SDL_QUIT) quit = true;
 
