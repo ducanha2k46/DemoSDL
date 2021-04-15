@@ -137,24 +137,29 @@ int main(int argc, char* argv[]) {
 		if (gBird.status_ == 0) y_bird = y_bird + 2;
 		else y_bird = y_bird - 1;
 
-
-
-		if (stop == 0)
+		if (stop == 0) {
 			for (int i = 0; i < 20; i++) {
+
 				gBlock[i].block_rect.x--;
-				gPlatform[i].flatform_rect.x--;
 
 				gBlock[i].Show_block(gScreen);
-				gPlatform[i].Show_flatform(gScreen);
 
 			}
-		else
+
 			for (int i = 0; i < 20; i++) {
-
-				gBlock[i].Show_block(gScreen);
-
+				gPlatform[i].flatform_rect.x--;
 				gPlatform[i].Show_flatform(gScreen);
 			}
+		}
+		else {
+			for (int i = 0; i < 20; i++) {
+				gBlock[i].Show_block(gScreen);
+			}
+
+			for (int i = 0; i < 20; i++) {
+				gPlatform[i].Show_flatform(gScreen);
+			}
+		}
 
 		gBird.Show(gScreen, { x_bird,y_bird,gBird.bird_width_,gBird.bird_height_ });
 		if (stop == 0)
