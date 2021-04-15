@@ -78,8 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\New folder\DemoSDL\SDL2_image-devel-2.0.5-VC\SDL2_image-2.0.5\include;D:\New folder\DemoSDL\SDL2-2.0.14\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\New folder\DemoSDL\SDL2_image-devel-2.0.5-VC\SDL2_image-2.0.5\lib\x64;D:\New folder\DemoSDL\SDL2-2.0.14\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\New folder\DemoSDL\SDL2_mixer-devel-2.0.4-VC\SDL2_mixer-2.0.4\include;D:\New folder\DemoSDL\SDL2_image-devel-2.0.5-VC\SDL2_image-2.0.5\include;D:\New folder\DemoSDL\SDL2-2.0.14\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\New folder\DemoSDL\SDL2_mixer-devel-2.0.4-VC\SDL2_mixer-2.0.4\lib\x64;D:\New folder\DemoSDL\SDL2_image-devel-2.0.5-VC\SDL2_image-2.0.5\lib\x64;D:\New folder\DemoSDL\SDL2-2.0.14\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -123,7 +123,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>D:\New folder\DemoSDL\SDL2-2.0.14\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -153,7 +153,7 @@
     <ClInclude Include="MainObject.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="Platform.h" />
+    <ClInclude Include="Ground.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

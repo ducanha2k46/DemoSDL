@@ -2,13 +2,12 @@
 #include"MainObject.h"
 #include"Display.h"
 #include"Block.h"
-#include"Platform.h"
+#include"Ground.h"
 
 SDL_Texture* gBackground;
 SDL_Texture* gBackGroundEnd;
 SDL_Texture* gBackGroundBegin;
 
-//sua o laptop
 
 bool init() {
 	bool check = true;
@@ -68,7 +67,7 @@ int main(int argc, char* argv[]) {
 	srand(time(NULL));
 
 	Block gBlock[20];
-	Flatform gPlatform[20];
+	Ground gGround[20];
 
 	//Random khoảng cách Block
 	int add_ = rand();
@@ -79,10 +78,10 @@ int main(int argc, char* argv[]) {
 		gBlock[i].block_rect.x = gBlock[i].block_rect.x + add_ * i;
 	}
 
-	//Load Image Flatform
+	//Load Image ground
 	for (int i = 0; i < 20; i++) {
-		gPlatform[i].Set_up_flatform(gScreen);
-		gPlatform[i].flatform_rect.x = gPlatform[i].flatform_rect.x + 1200 * i;
+		gGround[i].Set_up_ground(gScreen);
+		gGround[i].ground_rect.x = gGround[i].ground_rect.x + 1200 * i;
 	}
 
 
@@ -107,7 +106,7 @@ int main(int argc, char* argv[]) {
 		}
 
 		SDL_RenderClear(gScreen);
-   		/*while (begin == false) {
+   		if(begin == false) {
 			SDL_RenderClear(gScreen);
 
 			SDL_RenderCopy(gScreen, gBackGroundBegin, NULL, &screen_rect);
@@ -115,9 +114,11 @@ int main(int argc, char* argv[]) {
 			SDL_RenderPresent(gScreen);
 			if (gEvent.key.keysym.sym == SDLK_SPACE) {
 				begin = true;
-				break;
+
 			}
-		}*/
+			else continue;
+		}
+		
 		SDL_RenderCopy(gScreen, gBackground, NULL, &screen_rect);
 		if (gEvent.type == SDL_QUIT) quit = true;
 
@@ -163,8 +164,8 @@ int main(int argc, char* argv[]) {
 			}
 
 			for (int i = 0; i < 20; i++) {
-				gPlatform[i].flatform_rect.x--;
-				gPlatform[i].Show_flatform(gScreen);
+				gGround[i].ground_rect.x--;
+				gGround[i].Show_ground(gScreen);
 			}
 		}
 		else {
@@ -173,7 +174,7 @@ int main(int argc, char* argv[]) {
 			}
 
 			for (int i = 0; i < 20; i++) {
-				gPlatform[i].Show_flatform(gScreen);
+				gGround[i].Show_ground(gScreen);
 			}
 		}
 

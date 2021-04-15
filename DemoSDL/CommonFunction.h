@@ -7,6 +7,7 @@
 #include<SDL_image.h>
 #include<SDL.h>
 #include<ctime>
+#include<SDL_mixer.h>
 
 using namespace std;
 
