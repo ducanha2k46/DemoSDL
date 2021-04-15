@@ -5,6 +5,8 @@
 #include"Platform.h"
 
 SDL_Texture* gBackground;
+SDL_Texture* gBackGroundEnd;
+SDL_Texture* gBackGroundBegin;
 
 //sua o laptop
 
@@ -41,6 +43,8 @@ bool init() {
 }
 void LoadBackGround() {
 	gBackground = LoadImageTexture("Image/BackGround.png", gScreen);
+	gBackGroundEnd = LoadImageTexture("Image/BackGround_End.png", gScreen);
+	gBackGroundBegin = LoadImageTexture("Image/BackGround_Begin.png", gScreen);
 }
 
 void Close() {
@@ -58,7 +62,9 @@ int main(int argc, char* argv[]) {
 	if (init() == false) return -1;
 
 	SDL_SetRenderDrawColor(gScreen, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
+	//Create BackGround
 	LoadBackGround();
+
 	srand(time(NULL));
 
 	Block gBlock[20];
@@ -89,7 +95,7 @@ int main(int argc, char* argv[]) {
 	int animation_bird = 0;
 
 	int stop = 0;
-
+	bool begin = false;
 
 	while (!quit) {
 		while (SDL_PollEvent(&gEvent) != 0)
@@ -101,7 +107,17 @@ int main(int argc, char* argv[]) {
 		}
 
 		SDL_RenderClear(gScreen);
+   		/*while (begin == false) {
+			SDL_RenderClear(gScreen);
 
+			SDL_RenderCopy(gScreen, gBackGroundBegin, NULL, &screen_rect);
+
+			SDL_RenderPresent(gScreen);
+			if (gEvent.key.keysym.sym == SDLK_SPACE) {
+				begin = true;
+				break;
+			}
+		}*/
 		SDL_RenderCopy(gScreen, gBackground, NULL, &screen_rect);
 		if (gEvent.type == SDL_QUIT) quit = true;
 
@@ -183,9 +199,19 @@ int main(int argc, char* argv[]) {
 		if (stop == 1) {
 			y_bird += 3;
 		}
-		/*if ((y_bird + gBird.bird_height_) >= 552) {
-			SDL_Delay(500);
-		}*/
+		if ((y_bird + gBird.bird_height_) >= 552) {
+			bool again = false;
+			while (again == false) {
+
+				SDL_RenderClear(gScreen);
+
+				SDL_RenderCopy(gScreen, gBackGroundEnd, NULL, &screen_rect);
+
+				SDL_Delay(500);
+
+				SDL_RenderPresent(gScreen);
+			}
+		}
 
 		SDL_Delay(4);
 		SDL_RenderPresent(gScreen);
