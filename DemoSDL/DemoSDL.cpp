@@ -11,7 +11,8 @@ SDL_Texture* gBackGroundBegin;
 
 bool init() {
 	bool check = true;
-	if (SDL_INIT_VIDEO | SDL_INIT_AUDIO < 0) {
+	int ret = SDL_INIT_VIDEO;
+	if (ret < 0) {
 		return false;
 	}
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
@@ -64,7 +65,7 @@ int main(int argc, char* argv[]) {
 	if (init() == false) return -1;
 
 	SDL_SetRenderDrawColor(gScreen, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
-	//Create BackGround
+
 	LoadBackGround();
 
 	srand(time(NULL));
@@ -72,10 +73,9 @@ int main(int argc, char* argv[]) {
 	Block gBlock[20];
 	Ground gGround[20];
 
-	//Random khoảng cách Block
 	int add_ = rand();
 	add_ = (add_ % 100) + 250;
-	//Load Image Block
+
 	for (int i = 0; i < 20; i++) {
 		gBlock[i].Set_up_block(gScreen);
 		gBlock[i].block_rect.x = gBlock[i].block_rect.x + add_ * i;
