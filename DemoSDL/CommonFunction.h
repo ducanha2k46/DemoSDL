@@ -8,6 +8,7 @@
 #include<SDL.h>
 #include<ctime>
 #include<SDL_mixer.h>
+#include<vector>
 
 using namespace std;
 

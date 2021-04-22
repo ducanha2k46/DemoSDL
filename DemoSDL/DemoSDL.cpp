@@ -3,11 +3,14 @@
 #include"Display.h"
 #include"Block.h"
 #include"Ground.h"
+#include"Music.h"
 
 SDL_Texture* gBackground;
 SDL_Texture* gBackGroundEnd;
 SDL_Texture* gBackGroundBegin;
 
+Mix_Music* gMusic = NULL;
+Mix_Chunk* gCollision, * gDie, * gPoint, * gSwooshing, * gWing;
 
 bool init() {
 	bool check = true;
@@ -38,11 +41,9 @@ bool init() {
 				check = true;
 			}
 
-			if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-				check = false;
-			}
 		}
 	}
+	return check;
 }
 void LoadBackGround() {
 	gBackground = LoadImageTexture("Image/BackGround.png", gScreen);
@@ -50,13 +51,39 @@ void LoadBackGround() {
 	gBackGroundBegin = LoadImageTexture("Image/BackGround_Begin.png", gScreen);
 }
 
+void LoadMixSound() {
+	gCollision = LoadMixChunk("Mixer/Collision.wav");
+	gDie = LoadMixChunk("Mixer/Die.wav");
+	gPoint = LoadMixChunk("Mixer/Point.wav");
+	gSwooshing = LoadMixChunk("Mixer/Swooshing.wav");
+	gWing = LoadMixChunk("Mixer/Wing.wav");
+}
+
 void Close() {
+	//Free Chunk
+	Mix_FreeChunk(gCollision);
+	Mix_FreeChunk(gDie);
+	Mix_FreeChunk(gPoint);
+	Mix_FreeChunk(gWing);
+	Mix_FreeChunk(gSwooshing);
+	gCollision = NULL;
+	gDie = NULL;
+	gPoint = NULL;
+	gSwooshing = NULL;
+	gWing = NULL;
+	
+	//Free Music
+	Mix_FreeMusic(gMusic);
+	gMusic = NULL;
+
+	
 	SDL_DestroyRenderer(gScreen);
 	gScreen = NULL;
 
 	SDL_DestroyWindow(gWindow);
 	gWindow = NULL;
 
+	Mix_Quit();
 	IMG_Quit();
 	SDL_Quit();
 }
@@ -67,15 +94,16 @@ int main(int argc, char* argv[]) {
 	SDL_SetRenderDrawColor(gScreen, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
 
 	LoadBackGround();
+	LoadMixSound();
 
 	srand(time(NULL));
-
+	
 	Block gBlock[20];
 	Ground gGround[20];
 
 	int add_ = rand();
 	add_ = (add_ % 100) + 250;
-
+	//Load Image Block
 	for (int i = 0; i < 20; i++) {
 		gBlock[i].Set_up_block(gScreen);
 		gBlock[i].block_rect.x = gBlock[i].block_rect.x + add_ * i;
