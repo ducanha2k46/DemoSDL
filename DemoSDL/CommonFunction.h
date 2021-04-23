@@ -9,6 +9,7 @@
 #include<ctime>
 #include<SDL_mixer.h>
 #include<vector>
+#include<time.h>
 
 using namespace std;
 

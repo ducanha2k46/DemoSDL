@@ -5,12 +5,20 @@
 #include"Ground.h"
 #include"Music.h"
 
-SDL_Texture* gBackground;
-SDL_Texture* gBackGroundEnd;
-SDL_Texture* gBackGroundBegin;
+SDL_Texture* gBackground, * gBackGroundEnd, * gBackGroundBegin, * gBackGroundBeginStart,* gBackGroundBeginQuit;
 
-Mix_Music* gMusic = NULL;
+Mix_Music* gMusic = NULL; 
 Mix_Chunk* gCollision, * gDie, * gPoint, * gSwooshing, * gWing;
+
+Block gBlock[20];
+Ground gGround[20];
+
+bool Check_gBlock = false;
+bool Check_gGround = false;
+int point = 0;
+bool Check_sound = false;
+
+
 
 bool init() {
 	bool check = true;
@@ -35,20 +43,32 @@ bool init() {
 			check = false;
 		}
 		else {
-			SDL_SetRenderDrawColor(gScreen, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
+			SDL_SetRenderDrawColor(gScreen, 
+				RENDER_DRAW_COLOR, 
+				RENDER_DRAW_COLOR, 
+				RENDER_DRAW_COLOR, 
+				RENDER_DRAW_COLOR);
 			int imgFlags = IMG_INIT_PNG;
 			if (!(IMG_Init(imgFlags) && imgFlags)) {
-				check = true;
+				check = false;
+			}
+
+			if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1)
+			{
+				check = false;
 			}
 
 		}
 	}
 	return check;
 }
+
 void LoadBackGround() {
 	gBackground = LoadImageTexture("Image/BackGround.png", gScreen);
 	gBackGroundEnd = LoadImageTexture("Image/BackGround_End.png", gScreen);
 	gBackGroundBegin = LoadImageTexture("Image/BackGround_Begin.png", gScreen);
+	gBackGroundBeginStart = LoadImageTexture("Image/BackGround_Begin_Start.png", gScreen);
+	gBackGroundBeginQuit = LoadImageTexture("Image/BackGround_Begin_Quit.png", gScreen);
 }
 
 void LoadMixSound() {
@@ -57,6 +77,23 @@ void LoadMixSound() {
 	gPoint = LoadMixChunk("Mixer/Point.wav");
 	gSwooshing = LoadMixChunk("Mixer/Swooshing.wav");
 	gWing = LoadMixChunk("Mixer/Wing.wav");
+}
+
+void LoadBlock() {
+	int add_ = rand();
+	add_ = (add_ % 100) + 250;
+	for (int i = 0; i < 20; i++) {
+		gBlock[i].Set_up_block(gScreen);
+		gBlock[i].block_rect.x = gBlock[i].block_rect.x + add_ * i;
+	}
+
+}
+
+void LoadGround() {
+	for (int i = 0; i < 20; i++) {
+		gGround[i].Set_up_ground(gScreen);
+		gGround[i].ground_rect.x = gGround[i].ground_rect.x + 1200 * i;
+	}
 }
 
 void Close() {
@@ -89,32 +126,16 @@ void Close() {
 }
 
 int main(int argc, char* argv[]) {
+
+	srand(time(NULL));
 	if (init() == false) return -1;
 
 	SDL_SetRenderDrawColor(gScreen, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
 
 	LoadBackGround();
 	LoadMixSound();
-
-	srand(time(NULL));
-	
-	Block gBlock[20];
-	Ground gGround[20];
-
-	int add_ = rand();
-	add_ = (add_ % 100) + 250;
-	//Load Image Block
-	for (int i = 0; i < 20; i++) {
-		gBlock[i].Set_up_block(gScreen);
-		gBlock[i].block_rect.x = gBlock[i].block_rect.x + add_ * i;
-	}
-
-	//Load Image ground
-	for (int i = 0; i < 20; i++) {
-		gGround[i].Set_up_ground(gScreen);
-		gGround[i].ground_rect.x = gGround[i].ground_rect.x + 1200 * i;
-	}
-
+	LoadBlock();
+	LoadGround();
 
 	SDL_Rect screen_rect = { 0,0,1200,672 };
 	Bird gBird;
@@ -126,7 +147,7 @@ int main(int argc, char* argv[]) {
 
 	int stop = 0;
 	bool begin = false;
-
+	bool again = false;
 	while (!quit) {
 		while (SDL_PollEvent(&gEvent) != 0)
 		{
@@ -136,6 +157,18 @@ int main(int argc, char* argv[]) {
 			}
 		}
 
+		if (gEvent.key.keysym.sym == SDLK_ESCAPE) {
+			quit = true;
+
+			SDL_RenderClear(gScreen);
+
+			SDL_RenderCopy(gScreen, gBackGroundBeginQuit, NULL, &screen_rect);
+
+			SDL_RenderPresent(gScreen);
+
+			SDL_Delay(300);
+		}
+
 		SDL_RenderClear(gScreen);
 		if (begin == false) {
 			SDL_RenderClear(gScreen);
@@ -143,12 +176,22 @@ int main(int argc, char* argv[]) {
 			SDL_RenderCopy(gScreen, gBackGroundBegin, NULL, &screen_rect);
 
 			SDL_RenderPresent(gScreen);
-			if (gEvent.key.keysym.sym == SDLK_SPACE) {
+			if (gEvent.key.keysym.sym == SDLK_SPACE){
 				begin = true;
 
+				SDL_RenderClear(gScreen);
+
+				SDL_RenderCopy(gScreen, gBackGroundBeginStart, NULL, &screen_rect);
+
+				SDL_RenderPresent(gScreen);
+
+				SDL_Delay(300);
 			}
 			else continue;
+
 		}
+
+		
 
 		SDL_RenderCopy(gScreen, gBackground, NULL, &screen_rect);
 		if (gEvent.type == SDL_QUIT) quit = true;
@@ -166,7 +209,7 @@ int main(int argc, char* argv[]) {
 					animation_bird = 0;
 					break;
 				}
-
+				Mix_PlayChannel(-1, gWing, 0);
 			}
 			}
 		}
@@ -187,10 +230,15 @@ int main(int argc, char* argv[]) {
 
 		if (stop == 0) {
 			for (int i = 0; i < 20; i++) {
-
 				gBlock[i].block_rect.x--;
-
 				gBlock[i].Show_block(gScreen);
+
+				if ((gBlock[i].block_rect.x <= 200) && (gBlock[i].bPoint == false)) {
+					point++;
+					gBlock[i].bPoint = true;
+					Mix_PlayChannel(-1, gPoint, 0);
+					cerr << point << endl;
+				}
 
 			}
 
@@ -214,35 +262,37 @@ int main(int argc, char* argv[]) {
 			for (int i = 0; i < 20; i++) {
 				if (CheckCollision({ x_bird,y_bird,gBird.bird_width_,gBird.bird_height_ }, gBlock[i].block_rect)) {
 					stop = 1;
+
+					Mix_PlayChannel(-1, gCollision, 0);
 					if (x_bird <= gBlock[i].block_rect.x) {
 						x_bird = gBlock[i].block_rect.x;
 					}
 					break;
 				}
-				else
+				else {
 					if (CheckCollision({ x_bird,y_bird,gBird.bird_width_,gBird.bird_height_ }, gBlock[i].rect_fix)) {
 						stop = 1;
+						Mix_PlayChannel(-1, gCollision, 0);
 						if (x_bird <= gBlock[i].block_rect.x) {
 							x_bird = gBlock[i].block_rect.x;
 						}
+
 						break;
 					}
+				}
 			}
+
 		if (stop == 1) {
 			y_bird += 3;
 		}
-		if ((y_bird + gBird.bird_height_) >= 552) {
-			bool again = false;
-			while (again == false) {
 
-				SDL_RenderClear(gScreen);
-
-				SDL_RenderCopy(gScreen, gBackGroundEnd, NULL, &screen_rect);
-
-				SDL_Delay(500);
-
-				SDL_RenderPresent(gScreen);
-			}
+		if ((y_bird + gBird.bird_height_) >= 552 && Check_sound == false) {
+			again = false;
+			
+			Check_sound = true;
+			Mix_PlayChannel(-1, gCollision, 0);
+			SDL_Delay(300);
+			Mix_PlayChannel(-1, gDie, 0);
 		}
 
 		SDL_Delay(4);

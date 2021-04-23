@@ -64,10 +64,11 @@ void Bird::show_dead_(SDL_Renderer* des, SDL_Rect rect_) {
 	else if (current_frame_ == 4) show_rect_ = { 0,258,53,71 };
 	else if (current_frame_ == 5) show_rect_ = { 0,339,49,69 };
 
+	SDL_RenderCopy(des, t_down, &show_rect_, &rect_);
+
 
 	bird_height_ = show_rect_.h;
 	bird_width_ = show_rect_.w;
-	SDL_RenderCopy(des, t_down, &show_rect_, &rect_);
 }
 
 #endif // !MAINOBJECT__H_

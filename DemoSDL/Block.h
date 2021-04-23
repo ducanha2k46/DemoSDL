@@ -8,6 +8,7 @@ class Block
 public:
 	SDL_Texture* block_on, * block_below;
 	SDL_Rect block_rect, rect_fix;
+	bool bPoint;
 	void Show_block(SDL_Renderer* des);
 	void Set_up_block(SDL_Renderer* des);
 private:
@@ -23,11 +24,12 @@ void Block::Set_up_block(SDL_Renderer* des) {
 	cerr << block_rect.y<<endl;
 	block_rect.y = -(block_rect.y % 100) -100;
 	block_rect.x = 1286;
+	bPoint = false;
 }
 
 void Block::Show_block(SDL_Renderer* des) {
 	rect_fix = block_rect;
-	rect_fix.y = block_rect.y + 555;
+	rect_fix.y = block_rect.y + 567;
 	SDL_RenderCopy(des, block_on, NULL, &block_rect);
 	SDL_RenderCopy(des, block_below, NULL, &rect_fix);
 }
