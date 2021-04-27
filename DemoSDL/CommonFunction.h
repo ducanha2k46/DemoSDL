@@ -10,6 +10,7 @@
 #include<SDL_mixer.h>
 #include<vector>
 #include<time.h>
+#include<SDL_ttf.h>
 
 using namespace std;
 
@@ -18,6 +19,8 @@ static SDL_Window* gWindow = NULL;
 static SDL_Renderer* gScreen = NULL;
 
 static SDL_Event gEvent;
+
+static TTF_Font* gFont = NULL;
 
 //Screen
 const int SCREEN_WIGHT = 1200;

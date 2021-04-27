@@ -49,6 +49,7 @@ bool init() {
 				RENDER_DRAW_COLOR, 
 				RENDER_DRAW_COLOR);
 			int imgFlags = IMG_INIT_PNG;
+
 			if (!(IMG_Init(imgFlags) && imgFlags)) {
 				check = false;
 			}
@@ -58,9 +59,18 @@ bool init() {
 				check = false;
 			}
 
+			if (TTF_Init() == -1)
+			{
+				check = false;
+			}
+
 		}
 	}
 	return check;
+}
+
+void LoadFont() {
+	gFont = TTF_OpenFont("Font/montserrat/MontserratAlternates-Black.otf",30);
 }
 
 void LoadBackGround() {
@@ -231,6 +241,7 @@ int main(int argc, char* argv[]) {
 		if (stop == 0) {
 			for (int i = 0; i < 20; i++) {
 				gBlock[i].block_rect.x--;
+
 				gBlock[i].Show_block(gScreen);
 
 				if ((gBlock[i].block_rect.x <= 200) && (gBlock[i].bPoint == false)) {
