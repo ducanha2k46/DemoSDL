@@ -5,13 +5,15 @@
 #include"Ground.h"
 #include"Music.h"
 
-SDL_Texture* gBackground, * gBackGroundEnd, * gBackGroundBegin, * gBackGroundBeginStart,* gBackGroundBeginQuit;
+SDL_Texture* gBackground,* gBackGroundEnd,* gBackGroundBegin,* gBackGroundBeginStart, * gBackGroundBeginQuit, * gScore;
+SDL_Texture* gOne,* gTwo,* gThree,* gFour,* gFive,* gSix,* gSeven,* gEight,* gNine,* gZero;
 
 Mix_Music* gMusic = NULL; 
 Mix_Chunk* gCollision, * gDie, * gPoint, * gSwooshing, * gWing;
 
-Block gBlock[20];
+Block gBlock[45];
 Ground gGround[20];
+
 
 bool Check_gBlock = false;
 bool Check_gGround = false;
@@ -54,31 +56,31 @@ bool init() {
 				check = false;
 			}
 
-			if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1)
-			{
+			if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1){
+			
 				check = false;
 			}
 
-			if (TTF_Init() == -1)
-			{
+			if (TTF_Init() == -1) {
 				check = false;
 			}
+			
 
 		}
 	}
 	return check;
 }
 
-void LoadFont() {
-	gFont = TTF_OpenFont("Font/montserrat/MontserratAlternates-Black.otf",30);
-}
-
 void LoadBackGround() {
+	//Load Back
 	gBackground = LoadImageTexture("Image/BackGround.png", gScreen);
 	gBackGroundEnd = LoadImageTexture("Image/BackGround_End.png", gScreen);
 	gBackGroundBegin = LoadImageTexture("Image/BackGround_Begin.png", gScreen);
 	gBackGroundBeginStart = LoadImageTexture("Image/BackGround_Begin_Start.png", gScreen);
 	gBackGroundBeginQuit = LoadImageTexture("Image/BackGround_Begin_Quit.png", gScreen);
+
+	//Load Score
+	gScore = LoadImageTexture("Image/Score.png", gScreen);
 }
 
 void LoadMixSound() {
@@ -92,7 +94,7 @@ void LoadMixSound() {
 void LoadBlock() {
 	int add_ = rand();
 	add_ = (add_ % 100) + 250;
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 45; i++) {
 		gBlock[i].Set_up_block(gScreen);
 		gBlock[i].block_rect.x = gBlock[i].block_rect.x + add_ * i;
 	}
@@ -106,7 +108,91 @@ void LoadGround() {
 	}
 }
 
+void LoadPoint(){
+	gZero = LoadImageTexture("Image/0.png", gScreen);
+	gOne = LoadImageTexture("Image/1.png", gScreen);
+	gTwo = LoadImageTexture("Image/2.png", gScreen);
+	gThree = LoadImageTexture("Image/3.png", gScreen);
+	gFour = LoadImageTexture("Image/4.png", gScreen);
+	gFive = LoadImageTexture("Image/5.png", gScreen);
+	gSix = LoadImageTexture("Image/6.png", gScreen);
+	gSeven = LoadImageTexture("Image/7.png", gScreen);
+	gEight = LoadImageTexture("Image/8.png", gScreen);
+	gNine = LoadImageTexture("Image/9.png", gScreen);
+}
+
+void Point(int point,bool check) {
+	if (point < 10) {
+		if (point == 0) {
+			SDL_Rect point_rect = { 1050,600,44,49 };
+			if (check == true) point_rect.x += 45;
+			SDL_RenderCopy(gScreen, gZero, NULL, &point_rect);
+		}
+
+		if (point == 1) {
+			SDL_Rect point_rect = { 1050,600,36,48 };
+			if (check == true) point_rect.x += 45;
+			SDL_RenderCopy(gScreen, gOne, NULL, &point_rect);
+		}
+
+		if (point == 2) {
+			SDL_Rect point_rect = { 1050,600,42,48 };
+			if (check == true) point_rect.x += 45;
+			SDL_RenderCopy(gScreen, gTwo, NULL, &point_rect);
+		}
+		if (point == 3) {
+			SDL_Rect point_rect = { 1050,600,42,48 };
+			if (check == true) point_rect.x += 45;
+			SDL_RenderCopy(gScreen, gThree, NULL, &point_rect);
+		}
+
+		if (point == 4) {
+			SDL_Rect point_rect = { 1050,600,44,48 };
+			if (check == true) point_rect.x += 45;
+			SDL_RenderCopy(gScreen, gFour, NULL, &point_rect);
+		}
+
+		if (point == 5) {
+			SDL_Rect point_rect = { 1050,600,44,48 };
+			if (check == true) point_rect.x += 45;
+			SDL_RenderCopy(gScreen, gFive, NULL, &point_rect);
+		}
+		if (point == 6) {
+			SDL_Rect point_rect = { 1050,600,44,49 };
+			if (check == true) point_rect.x += 45;
+			SDL_RenderCopy(gScreen, gSix, NULL, &point_rect);
+		}
+
+		if (point == 7) {
+			SDL_Rect point_rect = { 1050,600,44,49 };
+			if (check == true) point_rect.x += 45;
+			SDL_RenderCopy(gScreen, gSeven, NULL, &point_rect);
+		}
+
+		if (point == 8) {
+			SDL_Rect point_rect = { 1050,600,44,49 };
+			if (check == true) point_rect.x += 45;
+			SDL_RenderCopy(gScreen, gEight, NULL, &point_rect);
+		}
+
+		if (point == 9) {
+			SDL_Rect point_rect = { 1050,600,44,49 };
+			if (check == true) point_rect.x += 45;
+			SDL_RenderCopy(gScreen, gNine, NULL, &point_rect);
+		}
+
+	}
+	else if (point > 10) {
+		int unit = point % 10;
+		int dozens = point / 10;
+		Point(dozens, false);
+		Point(unit, true);
+	}
+}
+
 void Close() {
+	
+
 	//Free Chunk
 	Mix_FreeChunk(gCollision);
 	Mix_FreeChunk(gDie);
@@ -123,13 +209,13 @@ void Close() {
 	Mix_FreeMusic(gMusic);
 	gMusic = NULL;
 
-	
+	//Destroy Windows
 	SDL_DestroyRenderer(gScreen);
 	gScreen = NULL;
-
 	SDL_DestroyWindow(gWindow);
 	gWindow = NULL;
 
+	TTF_Quit();
 	Mix_Quit();
 	IMG_Quit();
 	SDL_Quit();
@@ -146,8 +232,12 @@ int main(int argc, char* argv[]) {
 	LoadMixSound();
 	LoadBlock();
 	LoadGround();
+	LoadPoint();
+
 
 	SDL_Rect screen_rect = { 0,0,1200,672 };
+	SDL_Rect score_rect = { 800,600,223,47 };
+
 	Bird gBird;
 	gBird.set_up(gScreen);
 	int y_bird = 200, x_bird = 200;
@@ -201,8 +291,6 @@ int main(int argc, char* argv[]) {
 
 		}
 
-		
-
 		SDL_RenderCopy(gScreen, gBackground, NULL, &screen_rect);
 		if (gEvent.type == SDL_QUIT) quit = true;
 
@@ -239,7 +327,7 @@ int main(int argc, char* argv[]) {
 		else y_bird = y_bird - 1;
 
 		if (stop == 0) {
-			for (int i = 0; i < 20; i++) {
+			for (int i = 0; i < 45; i++) {
 				gBlock[i].block_rect.x--;
 
 				gBlock[i].Show_block(gScreen);
@@ -259,7 +347,7 @@ int main(int argc, char* argv[]) {
 			}
 		}
 		else {
-			for (int i = 0; i < 20; i++) {
+			for (int i = 0; i < 45; i++) {
 				gBlock[i].Show_block(gScreen);
 			}
 
@@ -267,10 +355,11 @@ int main(int argc, char* argv[]) {
 				gGround[i].Show_ground(gScreen);
 			}
 		}
-
+		SDL_RenderCopy(gScreen, gScore, NULL, &score_rect);
+		Point(point, false);
 		gBird.Show(gScreen, { x_bird,y_bird,gBird.bird_width_,gBird.bird_height_ });
 		if (stop == 0)
-			for (int i = 0; i < 20; i++) {
+			for (int i = 0; i < 45; i++) {
 				if (CheckCollision({ x_bird,y_bird,gBird.bird_width_,gBird.bird_height_ }, gBlock[i].block_rect)) {
 					stop = 1;
 
