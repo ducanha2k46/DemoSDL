@@ -13,83 +13,83 @@ SDL_Texture* LoadImageTexture(string path, SDL_Renderer* screen) {
 	return new_texture;
 }
 
-bool CheckCollision(const SDL_Rect& object1, const SDL_Rect& object2)
+bool CheckCollision(const SDL_Rect& objectA, const SDL_Rect& objectB)
 {
-    int left_a = object1.x;
-    int right_a = object1.x + object1.w;
-    int top_a = object1.y;
-    int bottom_a = object1.y + object1.h;
+    int leftA = objectA.x;
+    int rightA = objectA.x + objectA.w;
+    int topA = objectA.y;
+    int botA = objectA.y + objectA.h;
 
-    int left_b = object2.x;
-    int right_b = object2.x + object2.w;
-    int top_b = object2.y;
-    int bottom_b = object2.y + object2.h;
+    int leftB = objectB.x;
+    int rightB = objectB.x + objectB.w;
+    int topB = objectB.y;
+    int botB = objectB.y + objectB.h;
 
-    if (left_a > left_b && left_a < right_b)
+    if (leftA > leftB && leftA < rightB)
     {
-        if (top_a > top_b && top_a < bottom_b)
+        if (topA > topB && topA < botB)
         {
             return true;
         }
     }
 
-    if (left_a > left_b && left_a < right_b)
+    if (leftA > leftB && leftA < rightB)
     {
-        if (bottom_a > top_b && bottom_a < bottom_b)
+        if (botA > topB && botA < botB)
         {
             return true;
         }
     }
 
-    if (right_a > left_b && right_a < right_b)
+    if (rightA > leftB && rightA < rightB)
     {
-        if (top_a > top_b && top_a < bottom_b)
+        if (topA > topB && topA < botB)
         {
             return true;
         }
     }
 
-    if (right_a > left_b && right_a < right_b)
+    if (rightA > leftB && rightA < rightB)
     {
-        if (bottom_a > top_b && bottom_a < bottom_b)
+        if (botA > topB && botA < botB)
         {
             return true;
         }
     }
 
-    if (left_b > left_a && left_b < right_a)
+    if (leftB > leftA && leftB < rightA)
     {
-        if (top_b > top_a && top_b < bottom_a)
+        if (topB > topA && topB < botA)
         {
             return true;
         }
     }
 
-    if (left_b > left_a && left_b < right_a)
+    if (leftB > leftA && leftB < rightA)
     {
-        if (bottom_b > top_a && bottom_b < bottom_a)
+        if (botB > topA && botB < botA)
         {
             return true;
         }
     }
 
-    if (right_b > left_a && right_b < right_a)
+    if (rightB > leftA && rightB < rightA)
     {
-        if (top_b > top_a && top_b < bottom_a)
+        if (topB > topA && topB < botA)
         {
             return true;
         }
     }
 
-    if (right_b > left_a && right_b < right_a)
+    if (rightB > leftA && rightB < rightA)
     {
-        if (bottom_b > top_a && bottom_b < bottom_a)
+        if (botB > topA && botB < botA)
         {
             return true;
         }
     }
 
-    if (top_a == top_b && right_a == right_b && bottom_a == bottom_b)
+    if (topA == topB && rightA == rightB && botA == botB)
     {
         return true;
     }
