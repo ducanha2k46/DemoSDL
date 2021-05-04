@@ -368,25 +368,27 @@ int main(int argc, char* argv[]) {
 		if (gBird.status_ == 0) y_bird = y_bird + 2;
 		else y_bird = y_bird - 1;
 
-		if (stop == 0) {
+		if (stop == 0) {			
 			for (int i = 0; i < 45; i++) {
 				gBlock[i].block_rect.x--;
 
 				gBlock[i].Show_block(gScreen);
 
 				if ((gBlock[i].block_rect.x <= 200) && (gBlock[i].bPoint == false)) {
+
+					Mix_PlayChannel(-1, gPoint, 0);
 					point++;
 					gBlock[i].bPoint = true;
-					Mix_PlayChannel(-1, gPoint, 0);
-					cerr << point << endl;
+					cerr << point << endl; 
+					SDL_Delay(50);
 				}
-
 			}
 
 			for (int i = 0; i < 20; i++) {
 				gGround[i].ground_rect.x--;
 				gGround[i].Show_ground(gScreen);
 			}
+
 		}
 		else {
 			for (int i = 0; i < 45; i++) {
@@ -429,7 +431,6 @@ int main(int argc, char* argv[]) {
 
 		if (stop == 1) {
 			y_bird += 3;
-			Mix_PlayChannel(-1, gSwooshing, 0);
 		}
 
 		if ((y_bird + gBird.bird_height_) >= 552 && Check_sound == false) {

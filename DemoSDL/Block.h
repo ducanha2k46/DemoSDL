@@ -29,7 +29,7 @@ void Block::Set_up_block(SDL_Renderer* des) {
 
 void Block::Show_block(SDL_Renderer* des) {
 	rect_fix = block_rect;
-	rect_fix.y = block_rect.y + 567;
+	rect_fix.y = block_rect.y + 600;
 	SDL_RenderCopy(des, block_on, NULL, &block_rect);
 	SDL_RenderCopy(des, block_below, NULL, &rect_fix);
 }
