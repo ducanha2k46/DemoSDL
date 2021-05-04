@@ -248,8 +248,8 @@ int main(int argc, char* argv[]) {
 	int stop = 0;
 	bool begin = false;
 	bool again = true;
-
 	bool quit = false;
+
 	while (!quit) {
 		while (SDL_PollEvent(&gEvent) != 0)
 		{
@@ -429,6 +429,7 @@ int main(int argc, char* argv[]) {
 
 		if (stop == 1) {
 			y_bird += 3;
+			Mix_PlayChannel(-1, gSwooshing, 0);
 		}
 
 		if ((y_bird + gBird.bird_height_) >= 552 && Check_sound == false) {
